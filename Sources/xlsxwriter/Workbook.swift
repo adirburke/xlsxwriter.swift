@@ -5,6 +5,14 @@
 
 import Cxlsxwriter
 
+public struct CloseBookError : Error {
+    public let reason : String
+    
+    public init(reason: String) {
+        self.reason = reason
+    }
+}
+
 /// Struct to represent an Excel workbook.
 public struct Workbook {
   var lxw_workbook: UnsafeMutablePointer<lxw_workbook>
@@ -12,9 +20,9 @@ public struct Workbook {
   /// Create a new workbook object.
   public init(name: String) { self.lxw_workbook = name.withCString { workbook_new($0) } }
   /// Close the Workbook object and write the XLSX file.
-  public func close() {
+  public func close() throws {
     let error = workbook_close(lxw_workbook)
-    if error.rawValue != 0 { fatalError(String(cString: lxw_strerror(error))) }
+    if error.rawValue != 0 { throw  CloseBookError(reason: String(cString: lxw_strerror(error))) }
   }
   /// Add a new worksheet to the Excel workbook.
   public func addWorksheet(name: String? = nil) -> Worksheet {
@@ -26,6 +34,13 @@ public struct Workbook {
     }
     return Worksheet(worksheet)
   }
+    
+    public func getWorkBook(_ name : String) -> Worksheet {
+        let worksheet: UnsafeMutablePointer<lxw_worksheet> = name.withCString {
+            workbook_get_worksheet_by_name(lxw_workbook, $0)
+        }
+        return Worksheet(worksheet)
+    }
   /// Add a new chartsheet to a workbook.
   public func addChartsheet(name: String? = nil) -> Chartsheet {
     let chartsheet: UnsafeMutablePointer<lxw_chartsheet>

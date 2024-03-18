@@ -113,6 +113,29 @@ public struct Format {
   }
 }
 
+public extension Format {
+    @discardableResult func setDateFormat() -> Format {
+        self.set(num_format: "dd/mm/yy")
+    }
+    
+    @discardableResult func setTime() -> Format {
+        self.set(num_format: "hh:MM")
+    }
+    
+    @discardableResult func setDuration() -> Format {
+        self.set(num_format: "h:mm")
+    }
+    
+    @discardableResult func setCurrency() -> Format {
+        self.set(num_format: "$0.00")
+    }
+    
+    @discardableResult func setAccounting() -> Format {
+        self.set(num_format: 8)
+    }
+}
+
+
 /// Structure for color which contains common colors.
 public struct Color {
   public var hex: UInt32
@@ -135,5 +158,6 @@ public struct Color {
   public static var silver: Self = Self(hex: 0xC0C0C0)
   public static var white: Self = Self(hex: 0xFFFFFF)
   public static var yellow: Self = Self(hex: 0xFFFF00)
+    public static var lightGray: Self = Self(hex: 0xD0CECE)
 }
 
