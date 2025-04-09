@@ -5,10 +5,10 @@ let package = Package(
   name: "xlsxwriter.swift",
   products: [
     .library(name: "xlsxwriter", targets: ["xlsxwriter"])],
+  dependencies: [
+      .package(url: "https://github.com/jmcnamara/libxlsxwriter", .branchItem("main")),
+  ],
   targets: [
-    .systemLibrary(name: "Cxlsxwriter",
-                   pkgConfig: "xlsxwriter",
-                   providers: [.brew(["xlibxlsxwriter"])]),
-    .target(name: "xlsxwriter", dependencies: ["Cxlsxwriter"]),
+    .target(name: "xlsxwriter", dependencies: ["libxlsxwriter"]),
     .testTarget(name: "xlsxwriterTests", dependencies: ["xlsxwriter"]),
   ])
