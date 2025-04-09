@@ -3,7 +3,7 @@
 //  Created by Daniel Müllenborn on 31.12.20.
 //
 
-import Cxlsxwriter
+import libxlsxwriter
 
 public struct CloseBookError : Error {
     public let reason : String
