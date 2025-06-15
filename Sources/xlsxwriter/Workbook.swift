@@ -18,7 +18,12 @@ public struct Workbook {
   var lxw_workbook: UnsafeMutablePointer<lxw_workbook>
 
   /// Create a new workbook object.
-  public init(name: String) { self.lxw_workbook = name.withCString { workbook_new($0) } }
+    public init(name: String) throws {
+      guard let workbook = name.withCString({ workbook_new($0) }) else {
+        throw CloseBookError(reason: "Failed to create workbook at path: \(name)")
+      }
+      self.lxw_workbook = workbook
+    }
   /// Close the Workbook object and write the XLSX file.
   public func close() throws {
     let error = workbook_close(lxw_workbook)
@@ -35,10 +40,8 @@ public struct Workbook {
     return Worksheet(worksheet)
   }
     
-    public func getWorkBook(_ name : String) -> Worksheet {
-        let worksheet: UnsafeMutablePointer<lxw_worksheet> = name.withCString {
-            workbook_get_worksheet_by_name(lxw_workbook, $0)
-        }
+    public func getWorkBook(_ name : String) throws -> Worksheet {
+        guard let worksheet = name.withCString( { workbook_get_worksheet_by_name(lxw_workbook, $0) }) else { throw CloseBookError(reason: "Unable to create get a WorkBook at \(name)")}
         return Worksheet(worksheet)
     }
   /// Add a new chartsheet to a workbook.
